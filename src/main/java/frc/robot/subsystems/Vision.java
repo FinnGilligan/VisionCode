@@ -15,6 +15,8 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.LimelightHelpers;
 
 public class Vision extends SubsystemBase {
   private final NetworkTable m_limelightTable;
@@ -23,6 +25,7 @@ public class Vision extends SubsystemBase {
   private final int MAX_ENTRIES = 50;
   private final NetworkTableEntry m_led_entry;
   private final DoubleArraySubscriber botposeSigh;
+  private int idIndex = 0;
 
   /**
    * Creates a new Vision.
@@ -52,13 +55,19 @@ public class Vision extends SubsystemBase {
     
     m_targetList.add(ta);
 
-    SmartDashboard.putNumber("Distance", getDistance());
-    SmartDashboard.putNumber("X", botposeArray[0]);
-    SmartDashboard.putNumber("Y", botposeArray[1]);
-    SmartDashboard.putNumber("Z", botposeArray[2]);
-    SmartDashboard.putNumber("Roll", botposeArray[3]);
-    SmartDashboard.putNumber("Pitch", botposeArray[4]);
-    SmartDashboard.putNumber("Yaw", botposeArray[5]);
+    LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("");
+    LimelightHelpers.LimelightTarget_Fiducial[] llArr = llresults.targetingResults.targets_Fiducials;
+
+
+    if(llArr.length > 0) {
+        SmartDashboard.putNumber("Distance", getDistance());
+        SmartDashboard.putNumber("X", llArr[0].getRobotPose_FieldSpace().getX());
+        SmartDashboard.putNumber("Y", llArr[0].getRobotPose_FieldSpace().getY());
+        SmartDashboard.putNumber("Z", llArr[0].getRobotPose_FieldSpace().getZ());
+        SmartDashboard.putNumber("Roll", llArr[0].getRobotPose_FieldSpace().getRotation().getX());
+        SmartDashboard.putNumber("Pitch", llArr[0].getRobotPose_FieldSpace().getRotation().getY());
+        SmartDashboard.putNumber("Yaw", llArr[0].getRobotPose_FieldSpace().getRotation().getZ());
+    }
   }
 
   public double getTX() {
@@ -86,7 +95,17 @@ public class Vision extends SubsystemBase {
     return tid;
   }
 
+  public double getIDIndex(){
+    return idIndex;
+  }
+
   public boolean isTargetValid() {
     return (tv == 1.0); 
   }
+
+  public void add(){
+    idIndex++;
+    idIndex %= Constants.OperatorConstants.idsLength;
+  }
+
 }

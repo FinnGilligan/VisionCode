@@ -15,5 +15,10 @@ package frc.robot;
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
-  }
+    
+    //array of april tags 1-16 
+    public static final Double[] id_Blue= {6.0, 12.0};
+    public static final Double[] id_Red = {6.0, 12.0};
+    public static final int idsLength = 0;
+  } 
 }

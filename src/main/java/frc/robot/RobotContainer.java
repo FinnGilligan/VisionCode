@@ -5,8 +5,10 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.Add;
 import frc.robot.commands.JoystickDriveCMD;
 import frc.robot.commands.Rotate;
+import frc.robot.subsystems.BeamBreak;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Vision;
@@ -28,6 +30,7 @@ public class RobotContainer {
   private final Vision limelight = new Vision();
   private final Drivetrain drivetrain = new Drivetrain();
   private final Joystick joystick = new Joystick(OperatorConstants.kDriverControllerPort);
+  private final BeamBreak beambreak = new BeamBreak();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -64,10 +67,15 @@ drivetrain.setDefaultCommand(new JoystickDriveCMD(
 
     new JoystickButton(joystick, 1).toggleOnTrue(new Rotate(
   drivetrain, 
+  limelight,
   () -> limelight.getTX(),
   () -> limelight.getTY(),
   () -> limelight.getTA(),
   () -> limelight.getTID()));
+
+    new JoystickButton(joystick, 2).toggleOnTrue(new Add(
+      limelight
+    ));
   }
 
   /**
